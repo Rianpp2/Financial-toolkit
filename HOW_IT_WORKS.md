@@ -345,7 +345,7 @@ Since the site lives at `https://username.github.io/financial-toolkit/`, all int
 ### Option 1: Direct File Open (Simplest)
 ```bash
 # Clone
-git clone https://github.com/rianpatel/financial-toolkit.git
+git clone https://github.com/Rianpp2/financial-toolkit.git
 cd financial-toolkit
 
 # Open in browser

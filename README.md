@@ -4,9 +4,7 @@ A collection of professional financial calculators for investment analysis, loan
 
 ## 🌐 Live Demo
 
-**[View Live Demo →](https://rianpatel.github.io/financial-toolkit/)**
-
-*(Replace `rianpatel` with your GitHub username after deployment)*
+**[View Live Demo →](https://Rianpp2.github.io/financial-toolkit/)**
 
 ---
 
@@ -18,7 +16,7 @@ Simply open `index.html` in your browser:
 
 ```bash
 # Clone the repository
-git clone https://github.com/rianpatel/financial-toolkit.git
+git clone https://github.com/Rianpp2/financial-toolkit.git
 cd financial-toolkit
 
 # Open in default browser
@@ -56,8 +54,7 @@ Calculate future value with support for:
 - Regular contributions (beginning or end of period)
 - Effective annual rate calculation
 
-![Compound Interest Calculator](docs/screenshots/compound-interest.png)
-*[Screenshot placeholder — add actual screenshot to `docs/screenshots/`]*
+*Screenshots can be added after deployment by placing images in `docs/screenshots/`*
 
 ---
 
@@ -68,8 +65,7 @@ Mortgage and loan analysis with:
 - Total interest cost breakdown
 - Bi-weekly payment savings tip
 
-![Loan Amortization](docs/screenshots/loan-amortization.png)
-*[Screenshot placeholder — add actual screenshot to `docs/screenshots/`]*
+*Screenshots can be added after deployment by placing images in `docs/screenshots/`*
 
 ---
 
@@ -79,8 +75,7 @@ Three analysis modes:
 - **Annualized Return** — Convert total return to annualized rate
 - **Investment Comparison** — Side-by-side CAGR comparison of two investments
 
-![Investment Returns](docs/screenshots/investment-returns.png)
-*[Screenshot placeholder — add actual screenshot to `docs/screenshots/`]*
+*Screenshots can be added after deployment by placing images in `docs/screenshots/`*
 
 ---
 
@@ -91,8 +86,7 @@ Two planning modes:
 - Real rate of return calculations (nominal return adjusted for inflation)
 - 4% rule benchmark reference
 
-![Retirement Planner](docs/screenshots/retirement-planner.png)
-*[Screenshot placeholder — add actual screenshot to `docs/screenshots/`]*
+*Screenshots can be added after deployment by placing images in `docs/screenshots/`*
 
 ---
 
@@ -102,8 +96,7 @@ Fixed income analysis tools:
 - **YTM from Price** — Yield to maturity via Newton-Raphson approximation
 - **Duration & Convexity** — Macaulay duration, modified duration, convexity, DV01
 
-![Bond Calculator](docs/screenshots/bond-calculator.png)
-*[Screenshot placeholder — add actual screenshot to `docs/screenshots/`]*
+*Screenshots can be added after deployment by placing images in `docs/screenshots/`*
 
 ---
 
@@ -115,8 +108,7 @@ Capital budgeting evaluation:
 - Payback Period
 - Full cash flow summary table
 
-![NPV IRR](docs/screenshots/npv-irr.png)
-*[Screenshot placeholder — add actual screenshot to `docs/screenshots/`]*
+*Screenshots can be added after deployment by placing images in `docs/screenshots/`*
 
 ---
 
@@ -150,7 +142,7 @@ This repository includes a GitHub Actions workflow (`.github/workflows/pages.yml
    git add .
    git commit -m "Initial commit: Financial Toolkit"
    git branch -M main
-   git remote add origin https://github.com/rianpatel/financial-toolkit.git
+   git remote add origin https://github.com/Rianpp2/financial-toolkit.git
    git push -u origin main
    ```
 
@@ -160,7 +152,7 @@ This repository includes a GitHub Actions workflow (`.github/workflows/pages.yml
    - The workflow will run automatically on push
 
 3. **Access your site:**
-   - URL: `https://<your-username>.github.io/financial-toolkit/`
+   - URL: `https://Rianpp2.github.io/financial-toolkit/`
    - First deployment takes 1-2 minutes
 
 ### Manual Deployment
@@ -269,8 +261,8 @@ This is an educational project, but improvements are welcome:
 
 ## 📞 Support
 
-- **Issues:** [GitHub Issues](https://github.com/rianpatel/financial-toolkit/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/rianpatel/financial-toolkit/discussions)
+- **Issues:** [GitHub Issues](https://github.com/Rianpp2/financial-toolkit/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/Rianpp2/financial-toolkit/discussions)
 
 ---
 
