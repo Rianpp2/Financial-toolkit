@@ -501,7 +501,7 @@ This project is licensed under the **MIT License** — see [LICENSE](LICENSE) fo
   - Fabozzi — *Bond Markets, Analysis, and Strategies* / *Fixed Income Mathematics*
   - Pfau — *Retirement Planning*
 - Chart.js for visualizations
-- Built for **BUS 201 — Professional Development** and **FIN 445 — Investments** at the University of Illinois
+- Built for **FIN 445 — Investments** at the University of Illinois
 
 ---
 

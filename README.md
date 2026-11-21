@@ -1,6 +1,6 @@
 # Financial Toolkit
 
-A collection of professional financial calculators for investment analysis, loan calculations, and portfolio management. Built for educational coursework (BUS 201 Professional Development, FIN 445 Investments).
+A collection of professional financial calculators for investment analysis, loan calculations, and portfolio management. Built for educational coursework (FIN 445 Investments).
 
 ## 🌐 Live Demo
 
@@ -206,7 +206,6 @@ financial-toolkit/
 
 This project was developed as part of coursework for:
 
-- **BUS 201 — Professional Development** (University of Illinois)
 - **FIN 445 — Investments** (University of Illinois)
 
 ### Academic Integrity Notice
@@ -270,7 +269,7 @@ This is an educational project, but improvements are welcome:
 
 - Financial formulas based on standard corporate finance textbooks (Brealey, Myers, Allen; Bodie, Kane, Marcus)
 - UI inspiration from modern financial platforms
-- Built with ❤️ for BUS 201 / FIN 445 coursework at the University of Illinois
+- Built with ❤️ for FIN 445 coursework at the University of Illinois
 
 ---
 

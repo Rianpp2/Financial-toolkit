@@ -23,7 +23,7 @@ All calculators share a unified, responsive UI with dark/light theme support, ke
 
 | Persona | Why They Need This |
 |---------|-------------------|
-| **Finance Students (BUS 201, FIN 445, MSF, MBA)** | Interactive learning aid for time-value-of-money, bond math, capital budgeting, and retirement planning concepts. Verify homework, explore "what-if" scenarios instantly. |
+| **Finance Students (FIN 445, MSF, MBA)** | Interactive learning aid for time-value-of-money, bond math, capital budgeting, and retirement planning concepts. Verify homework, explore "what-if" scenarios instantly. |
 | **Investment Banking / PE Analysts** | Quick back-of-envelope calculations for CAGR, NPV/IRR, bond duration, and loan amortization without opening Excel. |
 | **Real Estate / Credit Analysts** | Loan amortization schedules with bi-weekly payment analysis; bond analytics for credit spread work. |
 | **Financial Advisors / Wealth Managers** | Retirement planning conversations with clients: show savings gaps, withdrawal sustainability, and inflation impact in real time. |
