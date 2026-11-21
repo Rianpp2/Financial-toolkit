@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Financial Toolkit - A collection of financial calculators and tools for investment analysis, loan calculations, and portfolio management">
+    <title>Financial Toolkit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a56db;
+            --primary-dark: #1e40af;
+            --primary-light: #3b82f6;
+            --secondary: #059669;
+            --secondary-dark: #047857;
+            --danger: #dc2626;
+            --warning: #d97706;
+            --bg: #f8fafc;
+            --bg-card: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+            --radius: 12px;
+            --radius-sm: 8px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary: #3b82f6;
+                --primary-dark: #2563eb;
+                --primary-light: #60a5fa;
+                --secondary: #10b981;
+                --secondary-dark: #059669;
+                --bg: #0f172a;
+                --bg-card: #1e293b;
+                --text: #f1f5f9;
+                --text-muted: #94a3b8;
+                --border: #334155;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: var(--radius);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(255,255,255,0.2);
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            margin-top: 1rem;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tool-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .tool-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tool-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .tool-card p {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            font-size: 0.9375rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9375rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary-dark);
+        }
+
+        .tool-content {
+            display: none;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .tool-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.15);
+        }
+
+        .result-box {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: var(--text-muted);
+        }
+
+        .result-value {
+            font-weight: 600;
+            font-family: 'SF Mono', 'Monaco', monospace;
+        }
+
+        .result-value.positive { color: var(--secondary); }
+        .result-value.negative { color: var(--danger); }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem 1.5rem;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab {
+            padding: 0.75rem 1rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab:hover:not(.active) {
+            color: var(--text);
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            header h1 { font-size: 2rem; }
+        }
+
+        .info-box {
+            background: rgba(26, 86, 219, 0.1);
+            border: 1px solid rgba(26, 86, 219, 0.2);
+            border-radius: var(--radius-sm);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .info-box.warning {
+            background: rgba(217, 119, 6, 0.1);
+            border-color: rgba(217, 119, 6, 0.2);
+        }
+
+        .info-box.danger {
+            background: rgba(220, 38, 38, 0.1);
+            border-color: rgba(220, 38, 38, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Financial Toolkit</h1>
+            <p>Professional financial calculators for investment analysis, loans, and portfolio management</p>
+            <span class="badge">v1.0.0 — Built for BUS 201 / FIN 445 Coursework</span>
+        </header>
+
+        <div class="tools-grid">
+            <!-- Compound Interest Calculator -->
+            <article class="tool-card" data-tool="compound">
+                <div class="tool-icon" style="background: rgba(26, 86, 219, 0.1); color: var(--primary);">📈</div>
+                <h3>Compound Interest</h3>
+                <p>Calculate future value of investments with compound interest, regular contributions, and varying frequencies.</p>
+                <button class="btn btn-primary" onclick="toggleTool('compound')">Open Calculator</button>
+                <div class="tool-content" id="compound-content">
+                    <div class="tabs">
+                        <button class="tab active" onclick="switchTab('compound', 'basic')">Basic</button>
+                        <button class="tab" onclick="switchTab('compound', 'advanced')">With Contributions</button>
+                    </div>
+                    <div class="tab-panel active" id="compound-basic">
+                        <div class="form-group">
+                            <label>Principal ($)</label>
+                            <input type="number" id="ci-principal" value="10000" step="100" min="0">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Annual Rate (%)</label>
+                                <input type="number" id="ci-rate" value="7" step="0.1" min="0" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label>Years</label>
+                                <input type="number" id="ci-years" value="10" step="1" min="0">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Compounding Frequency</label>
+                            <select id="ci-frequency">
+                                <option value="1">Annually</option>
+                                <option value="2">Semi-Annually</option>
+                                <option value="4" selected>Quarterly</option>
+                                <option value="12">Monthly</option>
+                                <option value="365">Daily</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="calculateCompound('basic')" style="width: 100%;">Calculate</button>
+                        <div class="result-box" id="ci-result-basic" style="display: none;"></div>
+                    </div>
+                    <div class="tab-panel" id="compound-advanced">
+                        <div class="form-group">
+                            <label>Principal ($)</label>
+                            <input type="number" id="ci-principal-adv" value="10000" step="100" min="0">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Annual Rate (%)</label>
+                                <input type="number" id="ci-rate-adv" value="7" step="0.1" min="0" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label>Years</label>
+                                <input type="number" id="ci-years-adv" value="10" step="1" min="0">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Monthly Contribution ($)</label>
+                                <input type="number" id="ci-contribution" value="500" step="50" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Contribution Timing</label>
+                                <select id="ci-timing">
+                                    <option value="end">End of Period</option>
+                                    <option value="beginning">Beginning of Period</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Compounding Frequency</label>
+                            <select id="ci-frequency-adv">
+                                <option value="1">Annually</option>
+                                <option value="2">Semi-Annually</option>
+                                <option value="4" selected>Quarterly</option>
+                                <option value="12">Monthly</option>
+                                <option value="365">Daily</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="calculateCompound('advanced')" style="width: 100%;">Calculate</button>
+                        <div class="result-box" id="ci-result-adv" style="display: none;"></div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Loan Amortization -->
+            <article class="tool-card" data-tool="loan">
+                <div class="tool-icon" style="background: rgba(5, 150, 105, 0.1); color: var(--secondary);">🏠</div>
+                <h3>Loan Amortization</h3>
+                <p>Calculate mortgage payments, view amortization schedules, and analyze total interest costs.</p>
+                <button class="btn btn-primary" onclick="toggleTool('loan')">Open Calculator</button>
+                <div class="tool-content" id="loan-content">
+                    <div class="form-group">
+                        <label>Loan Amount ($)</label>
+                        <input type="number" id="loan-amount" value="300000" step="1000" min="0">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Annual Interest Rate (%)</label>
+                            <input type="number" id="loan-rate" value="6.5" step="0.01" min="0" max="30">
+                        </div>
+                        <div class="form-group">
+                            <label>Loan Term (Years)</label>
+                            <input type="number" id="loan-term" value="30" step="1" min="1" max="50">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Payment Frequency</label>
+                        <select id="loan-frequency">
+                            <option value="12" selected>Monthly</option>
+                            <option value="26">Bi-Weekly</option>
+                            <option value="52">Weekly</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="calculateLoan()" style="width: 100%;">Calculate</button>
+                    <div class="result-box" id="loan-result" style="display: none;"></div>
+                    <div class="info-box" style="display: none; margin-top: 1rem;" id="loan-extra-info">
+                        <strong>💡 Tip:</strong> Making bi-weekly payments instead of monthly can save you significant interest and pay off your loan faster!
+                    </div>
+                </div>
+            </article>
+
+            <!-- Investment Returns -->
+            <article class="tool-card" data-tool="returns">
+                <div class="tool-icon" style="background: rgba(217, 119, 6, 0.1); color: var(--warning);">📊</div>
+                <h3>Investment Returns</h3>
+                <p>Calculate CAGR, annualized returns, and compare investment performance across time periods.</p>
+                <button class="btn btn-primary" onclick="toggleTool('returns')">Open Calculator</button>
+                <div class="tool-content" id="returns-content">
+                    <div class="tabs">
+                        <button class="tab active" onclick="switchTab('returns', 'cagr')">CAGR</button>
+                        <button class="tab" onclick="switchTab('returns', 'annualized')">Annualized Return</button>
+                        <button class="tab" onclick="switchTab('returns', 'compare')">Compare Investments</button>
+                    </div>
+                    <div class="tab-panel active" id="returns-cagr">
+                        <div class="form-group">
+                            <label>Beginning Value ($)</label>
+                            <input type="number" id="cagr-begin" value="10000" step="100" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Ending Value ($)</label>
+                            <input type="number" id="cagr-end" value="19672" step="100" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Years</label>
+                            <input type="number" id="cagr-years" value="10" step="0.1" min="0.1">
+                        </div>
+                        <button class="btn btn-primary" onclick="calculateCAGR()" style="width: 100%;">Calculate CAGR</button>
+                        <div class="result-box" id="cagr-result" style="display: none;"></div>
+                    </div>
+                    <div class="tab-panel" id="returns-annualized">
+                        <div class="form-group">
+                            <label>Total Return (%)</label>
+                            <input type="number" id="ann-total" value="50" step="0.1" min="-100">
+                        </div>
+                        <div class="form-group">
+                            <label>Holding Period (Years)</label>
+                            <input type="number" id="ann-years" value="3" step="0.1" min="0.1">
+                        </div>
+                        <button class="btn btn-primary" onclick="calculateAnnualized()" style="width: 100%;">Calculate</button>
+                        <div class="result-box" id="ann-result" style="display: none;"></div>
+                    </div>
+                    <div class="tab-panel" id="returns-compare">
+                        <div class="form-group">
+                            <label>Investment A - Initial ($)</label>
+                            <input type="number" id="comp-a-init" value="10000" step="100" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Investment A - Final ($)</label>
+                            <input type="number" id="comp-a-final" value="15000" step="100" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Investment A - Years</label>
+                            <input type="number" id="comp-a-years" value="5" step="0.1" min="0.1">
+                        </div>
+                        <hr style="margin: 1rem 0; border-color: var(--border);">
+                        <div class="form-group">
+                            <label>Investment B - Initial ($)</label>
+                            <input type="number" id="comp-b-init" value="10000" step="100" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Investment B - Final ($)</label>
+                            <input type="number" id="comp-b-final" value="18000" step="100" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Investment B - Years</label>
+                            <input type="number" id="comp-b-years" value="5" step="0.1" min="0.1">
+                        </div>
+                        <button class="btn btn-primary" onclick="compareInvestments()" style="width: 100%;">Compare</button>
+                        <div class="result-box" id="comp-result" style="display: none;"></div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Retirement Planner -->
+            <article class="tool-card" data-tool="retirement">
+                <div class="tool-icon" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">🏖️</div>
+                <h3>Retirement Planner</h3>
+                <p>Project retirement savings needs, calculate required monthly contributions, and test withdrawal strategies.</p>
+                <button class="btn btn-primary" onclick="toggleTool('retirement')">Open Calculator</button>
+                <div class="tool-content" id="retirement-content">
+                    <div class="tabs">
+                        <button class="tab active" onclick="switchTab('retirement', 'savings')">Savings Goal</button>
+                        <button class="tab" onclick="switchTab('retirement', 'withdrawal')">Withdrawal Strategy</button>
+                    </div>
+                    <div class="tab-panel active" id="retirement-savings">
+                        <div class="form-group">
+                            <label>Current Age</label>
+                            <input type="number" id="ret-age" value="30" step="1" min="18" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Retirement Age</label>
+                            <input type="number" id="ret-retire-age" value="65" step="1" min="18" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Current Savings ($)</label>
+                            <input type="number" id="ret-current" value="50000" step="1000" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Desired Annual Income ($)</label>
+                            <input type="number" id="ret-income" value="80000" step="1000" min="0">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Expected Return (%)</label>
+                                <input type="number" id="ret-return" value="7" step="0.1" min="0" max="20">
+                            </div>
+                            <div class="form-group">
+                                <label>Inflation Rate (%)</label>
+                                <input type="number" id="ret-inflation" value="3" step="0.1" min="0" max="15">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Years in Retirement</label>
+                            <input type="number" id="ret-years" value="25" step="1" min="1" max="50">
+                        </div>
+                        <button class="btn btn-primary" onclick="calculateRetirement()" style="width: 100%;">Calculate</button>
+                        <div class="result-box" id="ret-result" style="display: none;"></div>
+                    </div>
+                    <div class="tab-panel" id="retirement-withdrawal">
+                        <div class="form-group">
+                            <label>Portfolio Value ($)</label>
+                            <input type="number" id="wd-portfolio" value="1000000" step="10000" min="0">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Annual Withdrawal ($)</label>
+                                <input type="number" id="wd-amount" value="40000" step="1000" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Expected Return (%)</label>
+                                <input type="number" id="wd-return" value="6" step="0.1" min="0" max="20">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Inflation Rate (%)</label>
+                            <input type="number" id="wd-inflation" value="3" step="0.1" min="0" max="15">
+                        </div>
+                        <button class="btn btn-primary" onclick="calculateWithdrawal()" style="width: 100%;">Calculate</button>
+                        <div class="result-box" id="wd-result" style="display: none;"></div>
+                        <div class="info-box warning" style="margin-top: 1rem;">
+                            <strong>⚠️ 4% Rule:</strong> Traditional safe withdrawal rate is 3-4% of initial portfolio, adjusted annually for inflation.
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Bond Calculator -->
+            <article class="tool-card" data-tool="bond">
+                <div class="tool-icon" style="background: rgba(220, 38, 38, 0.1); color: var(--danger);">📜</div>
+                <h3>Bond Calculator</h3>
+                <p>Calculate bond prices, yields, duration, and convexity for fixed income analysis.</p>
+                <button class="btn btn-primary" onclick="toggleTool('bond')">Open Calculator</button>
+                <div class="tool-content" id="bond-content">
+                    <div class="tabs">
+                        <button class="tab active" onclick="switchTab('bond', 'price')">Price from Yield</button>
+                        <button class="tab" onclick="switchTab('bond', 'ytm')">YTM from Price</button>
+                        <button class="tab" onclick="switchTab('bond', 'duration')">Duration & Convexity</button>
+                    </div>
+                    <div class="tab-panel active" id="bond-price">
+                        <div class="form-group">
+                            <label>Face Value ($)</label>
+                            <input type="number" id="bond-face" value="1000" step="100" min="100">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Coupon Rate (%)</label>
+                                <input type="number" id="bond-coupon" value="5" step="0.01" min="0" max="20">
+                            </div>
+                            <div class="form-group">
+                                <label>Yield to Maturity (%)</label>
+                                <input type="number" id="bond-ytm" value="4.5" step="0.01" min="0" max="20">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Years to Maturity</label>
+                                <input type="number" id="bond-years" value="10" step="0.5" min="0.1" max="50">
+                            </div>
+                            <div class="form-group">
+                                <label>Payments per Year</label>
+                                <select id="bond-freq">
+                                    <option value="1">Annual</option>
+                                    <option value="2" selected>Semi-Annual</option>
+                                    <option value="4">Quarterly</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="calculateBondPrice()" style="width: 100%;">Calculate Price</button>
+                        <div class="result-box" id="bond-price-result" style="display: none;"></div>
+                    </div>
+                    <div class="tab-panel" id="bond-ytm">
+                        <div class="form-group">
+                            <label>Face Value ($)</label>
+                            <input type="number" id="bond-face-ytm" value="1000" step="100" min="100">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Coupon Rate (%)</label>
+                                <input type="number" id="bond-coupon-ytm" value="5" step="0.01" min="0" max="20">
+                            </div>
+                            <div class="form-group">
+                                <label>Current Price ($)</label>
+                                <input type="number" id="bond-price-input" value="1040" step="0.01" min="1">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Years to Maturity</label>
+                                <input type="number" id="bond-years-ytm" value="10" step="0.5" min="0.1" max="50">
+                            </div>
+                            <div class="form-group">
+                                <label>Payments per Year</label>
+                                <select id="bond-freq-ytm">
+                                    <option value="1">Annual</option>
+                                    <option value="2" selected>Semi-Annual</option>
+                                    <option value="4">Quarterly</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="calculateYTM()" style="width: 100%;">Calculate YTM</button>
+                        <div class="result-box" id="bond-ytm-result" style="display: none;"></div>
+                    </div>
+                    <div class="tab-panel" id="bond-duration">
+                        <div class="form-group">
+                            <label>Face Value ($)</label>
+                            <input type="number" id="bond-face-dur" value="1000" step="100" min="100">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Coupon Rate (%)</label>
+                                <input type="number" id="bond-coupon-dur" value="5" step="0.01" min="0" max="20">
+                            </div>
+                            <div class="form-group">
+                                <label>Yield to Maturity (%)</label>
+                                <input type="number" id="bond-ytm-dur" value="4.5" step="0.01" min="0" max="20">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Years to Maturity</label>
+                                <input type="number" id="bond-years-dur" value="10" step="0.5" min="0.1" max="50">
+                            </div>
+                            <div class="form-group">
+                                <label>Payments per Year</label>
+                                <select id="bond-freq-dur">
+                                    <option value="1">Annual</option>
+                                    <option value="2" selected>Semi-Annual</option>
+                                    <option value="4">Quarterly</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="calculateDuration()" style="width: 100%;">Calculate Duration</button>
+                        <div class="result-box" id="bond-dur-result" style="display: none;"></div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- NPV/IRR Calculator -->
+            <article class="tool-card" data-tool="npv">
+                <div class="tool-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">💰</div>
+                <h3>NPV / IRR Analysis</h3>
+                <p>Evaluate investment projects using Net Present Value and Internal Rate of Return calculations.</p>
+                <button class="btn btn-primary" onclick="toggleTool('npv')">Open Calculator</button>
+                <div class="tool-content" id="npv-content">
+                    <div class="form-group">
+                        <label>Discount Rate (%)</label>
+                        <input type="number" id="npv-rate" value="10" step="0.1" min="0" max="50">
+                    </div>
+                    <div class="form-group">
+                        <label>Initial Investment ($)</label>
+                        <input type="number" id="npv-initial" value="100000" step="1000" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Cash Flows (comma-separated, e.g., 30000,35000,40000,45000,50000)</label>
+                        <input type="text" id="npv-flows" value="30000,35000,40000,45000,50000" placeholder="Year 1, Year 2, Year 3...">
+                    </div>
+                    <button class="btn btn-primary" onclick="calculateNPV()" style="width: 100%;">Calculate NPV & IRR</button>
+                    <div class="result-box" id="npv-result" style="display: none;"></div>
+                    <div class="info-box" style="margin-top: 1rem;">
+                        <strong>📝 Note:</strong> IRR is calculated using numerical approximation. For non-conventional cash flows (multiple sign changes), there may be multiple IRRs.
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <footer>
+            <p>Financial Toolkit — Built for educational purposes (BUS 201 Professional Development, FIN 445 Investments)</p>
+            <p style="margin-top: 0.5rem;">Deployed via GitHub Pages | <a href="https://github.com" target="_blank" style="color: var(--primary);">View Source</a></p>
+        </footer>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Tool toggle functionality
+        function toggleTool(toolId) {
+            const content = document.getElementById(toolId + '-content');
+            const btn = content.previousElementSibling;
+
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                btn.textContent = 'Open Calculator';
+            } else {
+                // Close all other tools
+                document.querySelectorAll('.tool-content.active').forEach(c => {
+                    if (c !== content) {
+                        c.classList.remove('active');
+                        c.previousElementSibling.textContent = 'Open Calculator';
+                    }
+                });
+                content.classList.add('active');
+                btn.textContent = 'Close Calculator';
+            }
+        }
+
+        // Tab switching
+        function switchTab(toolId, tabId) {
+            document.querySelectorAll('#' + toolId + '-content .tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('#' + toolId + '-content .tab-panel').forEach(p => p.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(toolId + '-' + tabId).classList.add('active');
+        }
+
+        // Toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Format currency
+        function fmt(val) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            }).format(val);
+        }
+
+        function fmtNum(val) {
+            return new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(val);
+        }
+
+        // Compound Interest Calculations
+        function calculateCompound(mode) {
+            let principal, rate, years, frequency, contribution = 0, timing = 'end';
+
+            if (mode === 'basic') {
+                principal = parseFloat(document.getElementById('ci-principal').value);
+                rate = parseFloat(document.getElementById('ci-rate').value) / 100;
+                years = parseFloat(document.getElementById('ci-years').value);
+                frequency = parseInt(document.getElementById('ci-frequency').value);
+            } else {
+                principal = parseFloat(document.getElementById('ci-principal-adv').value);
+                rate = parseFloat(document.getElementById('ci-rate-adv').value) / 100;
+                years = parseFloat(document.getElementById('ci-years-adv').value);
+                frequency = parseInt(document.getElementById('ci-frequency-adv').value);
+                contribution = parseFloat(document.getElementById('ci-contribution').value);
+                timing = document.getElementById('ci-timing').value;
+            }
+
+            const periods = years * frequency;
+            const ratePerPeriod = rate / frequency;
+
+            // Future value of principal
+            let fv = principal * Math.pow(1 + ratePerPeriod, periods);
+
+            // Future value of annuity (contributions)
+            if (contribution > 0) {
+                const contribPerPeriod = contribution * 12 / frequency;
+                if (timing === 'beginning') {
+                    fv += contribPerPeriod * ((Math.pow(1 + ratePerPeriod, periods) - 1) / ratePerPeriod) * (1 + ratePerPeriod);
+                } else {
+                    fv += contribPerPeriod * ((Math.pow(1 + ratePerPeriod, periods) - 1) / ratePerPeriod);
+                }
+            }
+
+            const totalContributions = principal + (contribution * 12 * years);
+            const interestEarned = fv - totalContributions;
+
+            const resultDiv = document.getElementById(mode === 'basic' ? 'ci-result-basic' : 'ci-result-adv');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <div class="result-row">
+                    <span class="result-label">Future Value</span>
+                    <span class="result-value positive">${fmt(fv)}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Total Contributions</span>
+                    <span class="result-value">${fmt(totalContributions)}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Interest Earned</span>
+                    <span class="result-value positive">${fmt(interestEarned)}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Effective Annual Rate</span>
+                    <span class="result-value">${fmtNum((Math.pow(1 + ratePerPeriod, frequency) - 1) * 100)}%</span>
+                </div>
+            `;
+            showToast('Calculation complete!');
+        }
+
+        // Loan Amortization
+        function calculateLoan() {
+            const amount = parseFloat(document.getElementById('loan-amount').value);
+            const annualRate = parseFloat(document.getElementById('loan-rate').value) / 100;
+            const years = parseFloat(document.getElementById('loan-term').value);
+            const frequency = parseInt(document.getElementById('loan-frequency').value);
+
+            const periods = years * frequency;
+            const ratePerPeriod = annualRate / frequency;
+
+            if (ratePerPeriod === 0) {
+                showToast('Interest rate cannot be zero for amortization');
+                return;
+            }
+
+            const payment = amount * (ratePerPeriod * Math.pow(1 + ratePerPeriod, periods)) /
+                           (Math.pow(1 + ratePerPeriod, periods) - 1);
+
+            const totalPaid = payment * periods;
+            const totalInterest = totalPaid - amount;
+
+            // Generate amortization schedule (first 12 months + summary)
+            let scheduleHtml = '<table style="width:100%; border-collapse: collapse; font-size: 0.8rem;">';
+            scheduleHtml += '<thead><tr style="border-bottom: 2px solid var(--border);"><th style="text-align:left; padding: 0.5rem;">Period</th><th style="text-align:right; padding: 0.5rem;">Payment</th><th style="text-align:right; padding: 0.5rem;">Principal</th><th style="text-align:right; padding: 0.5rem;">Interest</th><th style="text-align:right; padding: 0.5rem;">Balance</th></tr></thead><tbody>';
+
+            let balance = amount;
+            const maxPeriods = Math.min(periods, 24);
+            for (let i = 1; i <= maxPeriods; i++) {
+                const interest = balance * ratePerPeriod;
+                const principal = payment - interest;
+                balance -= principal;
+                scheduleHtml += `<tr style="border-bottom: 1px solid var(--border);"><td style="padding: 0.5rem;">${i}</td><td style="text-align:right; padding: 0.5rem;">${fmt(payment)}</td><td style="text-align:right; padding: 0.5rem;">${fmt(principal)}</td><td style="text-align:right; padding: 0.5rem;">${fmt(interest)}</td><td style="text-align:right; padding: 0.5rem;">${fmt(Math.max(0, balance))}</td></tr>`;
+            }
+            if (periods > 24) {
+                scheduleHtml += `<tr><td colspan="5" style="text-align:center; padding: 0.5rem; color: var(--text-muted);">... ${periods - 24} more periods ...</td></tr>`;
+                // Show last payment
+                balance = amount;
+                for (let i = 1; i < periods; i++) {
+                    const interest = balance * ratePerPeriod;
+                    const principal = payment - interest;
+                    balance -= principal;
+                }
+                const interest = balance * ratePerPeriod;
+                const principal = payment - interest;
+                balance = 0;
+                scheduleHtml += `<tr style="border-bottom: 2px solid var(--border); font-weight: 600;"><td style="padding: 0.5rem;">${periods}</td><td style="text-align:right; padding: 0.5rem;">${fmt(payment)}</td><td style="text-align:right; padding: 0.5rem;">${fmt(principal)}</td><td style="text-align:right; padding: 0.5rem;">${fmt(interest)}</td><td style="text-align:right; padding: 0.5rem;">${fmt(0)}</td></tr>`;
+            }
+            scheduleHtml += '</tbody></table>';
+
+            const resultDiv = document.getElementById('loan-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <div class="result-row">
+                    <span class="result-label">Payment per Period</span>
+                    <span class="result-value">${fmt(payment)}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Total Payments</span>
+                    <span class="result-value">${fmt(totalPaid)}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Total Interest</span>
+                    <span class="result-value negative">${fmt(totalInterest)}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Interest as % of Principal</span>
+                    <span class="result-value">${fmtNum((totalInterest / amount) * 100)}%</span>
+                </div>
+                <h4 style="margin: 1rem 0 0.5rem;">Amortization Schedule</h4>
+                <div style="overflow-x: auto;">${scheduleHtml}</div>
+            `;
+
+            // Show bi-weekly tip if monthly
+            if (frequency === 12) {
+                document.getElementById('loan-extra-info').style.display = 'block';
+            } else {
+                document.getElementById('loan-extra-info').style.display = 'none';
+            }
+
+            showToast('Calculation complete!');
+        }
+
+        // CAGR Calculation
+        function calculateCAGR() {
+            const begin = parseFloat(document.getElementById('cagr-begin').value);
+            const end = parseFloat(document.getElementById('cagr-end').value);
+            const years = parseFloat(document.getElementById('cagr-years').value);
+
+            const cagr = Math.pow(end / begin, 1 / years) - 1;
+            const totalReturn = (end / begin - 1) * 100;
+
+            const resultDiv = document.getElementById('cagr-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <div class="result-row">
+                    <span class="result-label">CAGR</span>
+                    <span class="result-value positive">${fmtNum(cagr * 100)}%</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Total Return</span>
+                    <span class="result-value">${fmtNum(totalReturn)}%</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Beginning Value</span>
+                    <span class="result-value">${fmt(begin)}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Ending Value</span>
+                    <span class="result-value">${fmt(end)}</span>
+                </div>
+            `;
+            showToast('Calculation complete!');
+        }
+
+        // Annualized Return
+        function calculateAnnualized() {
+            const totalReturn = parseFloat(document.getElementById('ann-total').value) / 100;
+            const years = parseFloat(document.getElementById('ann-years').value);
+
+            const annualized = Math.pow(1 + totalReturn, 1 / years) - 1;
+
+            const resultDiv = document.getElementById('ann-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <div class="result-row">
+                    <span class="result-label">Annualized Return</span>
+                    <span class="result-value positive">${fmtNum(annualized * 100)}%</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Total Return</span>
+                    <span class="result-value">${fmtNum(totalReturn * 100)}%</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Holding Period</span>
+                    <span class="result-value">${years} years</span>
+                </div>
+            `;
+            showToast('Calculation complete!');
+        }
+
+        // Compare Investments
+        function compareInvestments() {
+            const aInit = parseFloat(document.getElementById('comp-a-init').value);
+            const aFinal = parseFloat(document.getElementById('comp-a-final').value);
+            const aYears = parseFloat(document.getElementById('comp-a-years').value);
+
+            const bInit = parseFloat(document.getElementById('comp-b-init').value);
+            const bFinal = parseFloat(document.getElementById('comp-b-final').value);
+            const bYears = parseFloat(document.getElementById('comp-b-years').value);
+
+            const aCAGR = Math.pow(aFinal / aInit, 1 / aYears) - 1;
+            const bCAGR = Math.pow(bFinal / bInit, 1 / bYears) - 1;
+
+            const resultDiv = document.getElementById('comp-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <h4 style="margin-bottom: 0.5rem;">Investment A</h4>
+                <div class="result-row">
+                    <span class="result-label">CAGR</span>
+                    <span class="result-value positive">${fmtNum(aCAGR * 100)}%</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Total Return</span>
+                    <span class="result-value">${fmtNum((aFinal / aInit - 1) * 100)}%</span>
+                </div>
+                <h4 style="margin: 1rem 0 0.5rem;">Investment B</h4>
+                <div class="result-row">
+                    <span class="result-label">CAGR</span>
+                    <span class="result-value positive">${fmtNum(bCAGR * 100)}%</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Total Return</span>
+                    <span class="result-value">${fmtNum((bFinal / bInit - 1) * 100)}%</span>
+                </div>
+                <hr style="margin: 1rem 0; border-color: var(--border);">
+                <div class="result-row">
+                    <span class="result-label">Better Investment</span>
+                    <span class="result-value ${aCAGR > bCAGR ? 'positive' : 'negative'}">${aCAGR > bCAGR ? 'Investment A' : 'Investment B'}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">CAGR Difference</span>
+                    <span class="result-value">${fmtNum(Math.abs(aCAGR - bCAGR) * 100)}%</span>
+                </div>
+            `;
+            showToast('Comparison complete!');
+        }
+
+        // Retirement Savings Goal
+        function calculateRetirement() {
+            const currentAge = parseInt(document.getElementById('ret-age').value);
+            const retireAge = parseInt(document.getElementById('ret-retire-age').value);
+            const currentSavings = parseFloat(document.getElementById('ret-current').value);
+            const desiredIncome = parseFloat(document.getElementById('ret-income').value);
+            const expectedReturn = parseFloat(document.getElementById('ret-return').value) / 100;
+            const inflation = parseFloat(document.getElementById('ret-inflation').value) / 100;
+            const yearsInRetirement = parseInt(document.getElementById('ret-years').value);
+
+            const yearsToRetire = retireAge - currentAge;
+            const realReturn = (1 + expectedReturn) / (1 + inflation) - 1;
+
+            // Future value of desired income adjusted for inflation
+            const futureIncome = desiredIncome * Math.pow(1 + inflation, yearsToRetire);
+
+            // Present value of retirement annuity at retirement date
+            const pvRetirement = futureIncome * (1 - Math.pow(1 + realReturn, -yearsInRetirement)) / realReturn;
+
+            // Future value of current savings
+            const fvCurrent = currentSavings * Math.pow(1 + expectedReturn, yearsToRetire);
+
+            // Additional needed
+            const additionalNeeded = Math.max(0, pvRetirement - fvCurrent);
+
+            // Monthly contribution needed
+            const monthlyContribution = additionalNeeded * (expectedReturn / 12) /
+                (Math.pow(1 + expectedReturn / 12, yearsToRetire * 12) - 1);
+
+            const resultDiv = document.getElementById('ret-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <div class="result-row">
+                    <span class="result-label">Years Until Retirement</span>
+                    <span class="result-value">${yearsToRetire}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Future Annual Income Needed</span>
+                    <span class="result-value">${fmt(futureIncome)}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Portfolio Needed at Retirement</span>
+                    <span class="result-value">${fmt(pvRetirement)}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Future Value of Current Savings</span>
+                    <span class="result-value">${fmt(fvCurrent)}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Additional Savings Needed</span>
+                    <span class="result-value negative">${fmt(additionalNeeded)}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Required Monthly Contribution</span>
+                    <span class="result-value positive">${fmt(monthlyContribution)}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Real Rate of Return</span>
+                    <span class="result-value">${fmtNum(realReturn * 100)}%</span>
+                </div>
+            `;
+            showToast('Calculation complete!');
+        }
+
+        // Withdrawal Strategy
+        function calculateWithdrawal() {
+            const portfolio = parseFloat(document.getElementById('wd-portfolio').value);
+            const withdrawal = parseFloat(document.getElementById('wd-amount').value);
+            const expectedReturn = parseFloat(document.getElementById('wd-return').value) / 100;
+            const inflation = parseFloat(document.getElementById('wd-inflation').value) / 100;
+
+            const withdrawalRate = withdrawal / portfolio;
+            const realReturn = (1 + expectedReturn) / (1 + inflation) - 1;
+
+            // Years until depletion (simplified)
+            let years = 0;
+            let balance = portfolio;
+            let currentWithdrawal = withdrawal;
+
+            while (balance > 0 && years < 100) {
+                balance = balance * (1 + expectedReturn) - currentWithdrawal;
+                currentWithdrawal *= (1 + inflation);
+                years++;
+            }
+
+            const resultDiv = document.getElementById('wd-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <div class="result-row">
+                    <span class="result-label">Initial Withdrawal Rate</span>
+                    <span class="result-value ${withdrawalRate <= 0.04 ? 'positive' : 'negative'}">${fmtNum(withdrawalRate * 100)}%</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Estimated Portfolio Longevity</span>
+                    <span class="result-value">${years} years</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Real Rate of Return</span>
+                    <span class="result-value">${fmtNum(realReturn * 100)}%</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">4% Rule Benchmark</span>
+                    <span class="result-value">${fmt(portfolio * 0.04)}/year</span>
+                </div>
+            `;
+            showToast('Calculation complete!');
+        }
+
+        // Bond Price from Yield
+        function calculateBondPrice() {
+            const face = parseFloat(document.getElementById('bond-face').value);
+            const couponRate = parseFloat(document.getElementById('bond-coupon').value) / 100;
+            const ytm = parseFloat(document.getElementById('bond-ytm').value) / 100;
+            const years = parseFloat(document.getElementById('bond-years').value);
+            const freq = parseInt(document.getElementById('bond-freq').value);
+
+            const periods = years * freq;
+            const couponPerPeriod = face * couponRate / freq;
+            const ratePerPeriod = ytm / freq;
+
+            let price = 0;
+            for (let i = 1; i <= periods; i++) {
+                price += couponPerPeriod / Math.pow(1 + ratePerPeriod, i);
+            }
+            price += face / Math.pow(1 + ratePerPeriod, periods);
+
+            const currentYield = (face * couponRate) / price * 100;
+
+            const resultDiv = document.getElementById('bond-price-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <div class="result-row">
+                    <span class="result-label">Bond Price</span>
+                    <span class="result-value positive">${fmt(price)}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Price as % of Par</span>
+                    <span class="result-value">${fmtNum(price / face * 100)}%</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Current Yield</span>
+                    <span class="result-value">${fmtNum(currentYield)}%</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Premium/Discount</span>
+                    <span class="result-value ${price > face ? 'positive' : 'negative'}">${fmt(price - face)}</span>
+                </div>
+            `;
+            showToast('Calculation complete!');
+        }
+
+        // YTM from Price (approximation using Newton-Raphson)
+        function calculateYTM() {
+            const face = parseFloat(document.getElementById('bond-face-ytm').value);
+            const couponRate = parseFloat(document.getElementById('bond-coupon-ytm').value) / 100;
+            const price = parseFloat(document.getElementById('bond-price-input').value);
+            const years = parseFloat(document.getElementById('bond-years-ytm').value);
+            const freq = parseInt(document.getElementById('bond-freq-ytm').value);
+
+            const periods = years * freq;
+            const couponPerPeriod = face * couponRate / freq;
+
+            // Newton-Raphson method for YTM
+            let ytm = couponRate; // Initial guess
+            for (let iter = 0; iter < 100; iter++) {
+                let pv = 0;
+                let dpv = 0;
+                for (let i = 1; i <= periods; i++) {
+                    const factor = Math.pow(1 + ytm / freq, i);
+                    pv += couponPerPeriod / factor;
+                    dpv -= i * couponPerPeriod / (factor * (1 + ytm / freq));
+                }
+                pv += face / Math.pow(1 + ytm / freq, periods);
+                dpv -= periods * face / (Math.pow(1 + ytm / freq, periods) * (1 + ytm / freq));
+
+                const diff = pv - price;
+                if (Math.abs(diff) < 0.001) break;
+                ytm -= diff / dpv;
+            }
+
+            const currentYield = (face * couponRate) / price * 100;
+
+            const resultDiv = document.getElementById('bond-ytm-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <div class="result-row">
+                    <span class="result-label">Yield to Maturity</span>
+                    <span class="result-value positive">${fmtNum(ytm * 100)}%</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Current Yield</span>
+                    <span class="result-value">${fmtNum(currentYield)}%</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Capital Gain/Loss</span>
+                    <span class="result-value ${price > face ? 'negative' : 'positive'}">${fmtNum((face - price) / price * 100)}%</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Approximation</span>
+                    <span class="result-value">${fmtNum(((face * couponRate + (face - price) / years) / ((face + price) / 2)) * 100)}%</span>
+                </div>
+            `;
+            showToast('Calculation complete!');
+        }
+
+        // Duration & Convexity
+        function calculateDuration() {
+            const face = parseFloat(document.getElementById('bond-face-dur').value);
+            const couponRate = parseFloat(document.getElementById('bond-coupon-dur').value) / 100;
+            const ytm = parseFloat(document.getElementById('bond-ytm-dur').value) / 100;
+            const years = parseFloat(document.getElementById('bond-years-dur').value);
+            const freq = parseInt(document.getElementById('bond-freq-dur').value);
+
+            const periods = years * freq;
+            const couponPerPeriod = face * couponRate / freq;
+            const ratePerPeriod = ytm / freq;
+
+            // Calculate price first
+            let price = 0;
+            for (let i = 1; i <= periods; i++) {
+                price += couponPerPeriod / Math.pow(1 + ratePerPeriod, i);
+            }
+            price += face / Math.pow(1 + ratePerPeriod, periods);
+
+            // Macaulay Duration
+            let macaulayDuration = 0;
+            let convexity = 0;
+            for (let i = 1; i <= periods; i++) {
+                const pv = couponPerPeriod / Math.pow(1 + ratePerPeriod, i);
+                macaulayDuration += i * pv;
+                convexity += i * (i + 1) * pv;
+            }
+            // Principal payment
+            const principalPV = face / Math.pow(1 + ratePerPeriod, periods);
+            macaulayDuration += periods * principalPV;
+            convexity += periods * (periods + 1) * principalPV;
+
+            macaulayDuration /= price;
+            convexity /= (price * Math.pow(1 + ratePerPeriod, 2));
+
+            // Modified Duration
+            const modifiedDuration = macaulayDuration / (1 + ratePerPeriod);
+
+            // Convert to annual
+            const macaulayAnnual = macaulayDuration / freq;
+            const modifiedAnnual = modifiedDuration / freq;
+            const convexityAnnual = convexity / Math.pow(freq, 2);
+
+            const resultDiv = document.getElementById('bond-dur-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <div class="result-row">
+                    <span class="result-label">Bond Price</span>
+                    <span class="result-value">${fmt(price)}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Macaulay Duration</span>
+                    <span class="result-value">${fmtNum(macaulayAnnual)} years</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Modified Duration</span>
+                    <span class="result-value">${fmtNum(modifiedAnnual)} years</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Convexity</span>
+                    <span class="result-value">${fmtNum(convexityAnnual)}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">DV01 (Price change per 1bp)</span>
+                    <span class="result-value">${fmt(price * modifiedAnnual * 0.0001)}</span>
+                </div>
+            `;
+            showToast('Calculation complete!');
+        }
+
+        // NPV / IRR
+        function calculateNPV() {
+            const rate = parseFloat(document.getElementById('npv-rate').value) / 100;
+            const initial = parseFloat(document.getElementById('npv-initial').value);
+            const flowsStr = document.getElementById('npv-flows').value;
+            const flows = flowsStr.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+
+            // NPV calculation
+            let npv = -initial;
+            for (let i = 0; i < flows.length; i++) {
+                npv += flows[i] / Math.pow(1 + rate, i + 1);
+            }
+
+            // IRR calculation (Newton-Raphson)
+            let irr = 0.1; // Initial guess 10%
+            for (let iter = 0; iter < 100; iter++) {
+                let npv_irr = -initial;
+                let dnpv = 0;
+                for (let i = 0; i < flows.length; i++) {
+                    const factor = Math.pow(1 + irr, i + 1);
+                    npv_irr += flows[i] / factor;
+                    dnpv -= (i + 1) * flows[i] / (factor * (1 + irr));
+                }
+                if (Math.abs(npv_irr) < 0.001) break;
+                irr -= npv_irr / dnpv;
+                if (irr < -0.99) { irr = NaN; break; } // No valid IRR
+            }
+
+            // Profitability Index
+            const pvInflows = npv + initial;
+            const pi = pvInflows / initial;
+
+            // Payback Period
+            let cumulative = -initial;
+            let payback = null;
+            for (let i = 0; i < flows.length; i++) {
+                cumulative += flows[i];
+                if (cumulative >= 0 && payback === null) {
+                    const prevCumulative = cumulative - flows[i];
+                    payback = i + (Math.abs(prevCumulative) / flows[i]);
+                }
+            }
+
+            const resultDiv = document.getElementById('npv-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <div class="result-row">
+                    <span class="result-label">NPV @ ${fmtNum(rate * 100)}%</span>
+                    <span class="result-value ${npv >= 0 ? 'positive' : 'negative'}">${fmt(npv)}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">IRR</span>
+                    <span class="result-value ${!isNaN(irr) && irr > rate ? 'positive' : 'negative'}">${isNaN(irr) ? 'N/A' : fmtNum(irr * 100) + '%'}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Profitability Index</span>
+                    <span class="result-value ${pi >= 1 ? 'positive' : 'negative'}">${fmtNum(pi)}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Payback Period</span>
+                    <span class="result-value">${payback ? fmtNum(payback) + ' years' : 'Never'}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">PV of Inflows</span>
+                    <span class="result-value">${fmt(pvInflows)}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Initial Investment</span>
+                    <span class="result-value">${fmt(initial)}</span>
+                </div>
+                <hr style="margin: 1rem 0; border-color: var(--border);">
+                <h4 style="margin-bottom: 0.5rem;">Cash Flow Summary</h4>
+                <div class="result-row">
+                    <span class="result-label">Period 0</span>
+                    <span class="result-value negative">${fmt(-initial)}</span>
+                </div>
+                ${flows.map((f, i) => `<div class="result-row"><span class="result-label">Period ${i + 1}</span><span class="result-value positive">${fmt(f)}</span></div>`).join('')}
+            `;
+            showToast('Calculation complete!');
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+                // Find the nearest calculator button and click it
+                const toolContent = e.target.closest('.tool-content');
+                if (toolContent) {
+                    const btn = toolContent.querySelector('.btn-primary');
+                    if (btn) btn.click();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
